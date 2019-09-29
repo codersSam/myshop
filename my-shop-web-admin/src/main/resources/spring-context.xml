@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!--通过加载配置文件来加载bean，在Spring第一代中的做法、各有利弊、xml优先级比注解的方式高-->
+    <!--必须放在第一行，否则加载不了
+    <bean id="springContext" class="com.senhua.my.shop.commons.context.SpringContext"></bean>
+    &lt;!&ndash;DAO&ndash;&gt;
+    <bean id="userDao" class="com.senhua.my.shop.dao.impl.UserDaoImpl"></bean>
+
+    &lt;!&ndash;service&ndash;&gt;
+    <bean id="userService" class="com.senhua.my.shop.service.impl.UserServiceImpl"></bean>-->
+
+
+    <!--开启注解模式加载bean、spring2后开始可以实现-->
+    <context:annotation-config />
+    <context:component-scan base-package="com.senhua.my.shop.web.admin">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"></context:exclude-filter>
+    </context:component-scan>
+
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" ></bean>
+    <bean id="beanValidator" class="com.senhua.my.shop.commons.validator.BeanValidator">
+        <property name="validator" ref="validator" />
+    </bean>
+
+    <!-- 配置事务管理器 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <!-- 开启事务注解驱动 -->
+    <tx:annotation-driven transaction-manager="transactionManager" />
+
+
+</beans>
